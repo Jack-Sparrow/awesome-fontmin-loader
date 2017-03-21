@@ -10,6 +10,16 @@ Fontmin loader for webpack,use to cut font files from texts.
 
 Suport: `ttf`,`eot`,`woff`,`woff2`,`svg`
 
+You can use [charactor-scanner](https://github.com/Jack-Sparrow/charactor-scanner) if you want to pick charactors from your code files.
+
+~~~
+const Scan = require('charactor-scanner');
+let text = Scan({
+  dir: path.resolve(__dirname, './code-directory'),
+  sync: true
+}).join('')
+~~~
+
 ## Usage
 
 `npm install --save-dev awesome-fontmin-loader`
