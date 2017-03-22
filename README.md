@@ -3,7 +3,6 @@
 
 [![NPM version][npm-image]][npm-url]
 [![node][node]][node-url]
-[![Build Status][travis-image]][travis-url]
 [![Downloads][downloads-image]][npm-url]
 [![Dependencies][dep-image]][dep-url]
 
@@ -54,8 +53,5 @@ Webpack 1.x config:
 [npm-image]: http://img.shields.io/npm/v/awesome-fontmin-loader.svg
 [node]: https://img.shields.io/node/v/awesome-fontmin-loader.svg
 [node-url]: https://nodejs.org
-[travis-url]: https://travis-ci.org/Jack-Sparrow/awesome-fontmin-loader
-[travis-image]: http://img.shields.io/travis/Jack-Sparrow/awesome-fontmin-loader.svg
-
 [dep-url]: https://david-dm.org/Jack-Sparrow/awesome-fontmin-loader
 [dep-image]: http://img.shields.io/david/Jack-Sparrow/awesome-fontmin-loader.svg
