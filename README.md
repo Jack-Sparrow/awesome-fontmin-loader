@@ -48,6 +48,10 @@ Webpack 1.x config:
 { test: /\.(svg|woff|woff2|ttf|eot)$/, loader: "awesome-fontmin?limit=1000&name=fonts/[name].[ext]&text='FOOBAR'" },
 ~~~
 
+## Limitations
+
+Fonts must have the same name and path as the TrueType version of the font.
+
 ## Ralated
 
 if you perfer a webpack plugin to a loader, you can see: [fontmin-webpack plugin](https://github.com/patrickhulce/fontmin-webpack)
