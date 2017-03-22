@@ -74,8 +74,7 @@ module.exports = function (content) {
     const fontmin = new Fontmin().src(accessResouce);
   
     config.text && fontmin.use(Fontmin.glyph({
-      text: config.text,
-      hinting: false
+      text: config.text
     }));
   
     needTransExt && fontmin.use(Fontmin[`ttf2${ext}`](ext === 'woff' ? {
