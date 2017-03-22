@@ -48,6 +48,11 @@ Webpack 1.x config:
 { test: /\.(svg|woff|woff2|ttf|eot)$/, loader: "awesome-fontmin?limit=1000&name=fonts/[name].[ext]&text='FOOBAR'" },
 ~~~
 
+## Ralated
+
+if you perfer a webpack plugin to a loader, you can see: [fontmin-webpack plugin](https://github.com/patrickhulce/fontmin-webpack)
+
+
 [downloads-image]: http://img.shields.io/npm/dm/awesome-fontmin-loader.svg
 [npm-url]: https://npmjs.org/package/awesome-fontmin-loader
 [npm-image]: http://img.shields.io/npm/v/awesome-fontmin-loader.svg
