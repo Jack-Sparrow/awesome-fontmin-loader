@@ -12,7 +12,7 @@ let globleContentCache = {};
 
 module.exports = function (content) {
   if(!this.emitFile) throw new Error("emitFile is required from module system");
-  this.cacheable && this.cacheable(false);
+  this.cacheable && this.cacheable();
   const callback = this.async();
   let options = LoaderUtiles.getOptions(this) || {};
   let config = {
@@ -53,7 +53,7 @@ module.exports = function (content) {
     }
   }
   
-  const noFontMinAccess = content => {
+  const noFontMinAccess = (content, resolve, rejact) => {
     let callbackParam = '';
     if(config.limit <= 0 || content.length < config.limit) {
       callbackParam = "module.exports = " + JSON.stringify("data:" + (mimetype ? mimetype + ";" : "") + "base64," + content.toString("base64"));
@@ -67,50 +67,57 @@ module.exports = function (content) {
       this.emitFile(url, content);
       callbackParam = "module.exports = " + publicPath + ";";
     }
-    callback(null, callbackParam);
+    resolve(callbackParam);
   };
   
-  if (!supportAccess) {
-    return noFontMinAccess(globleContentCache[ttfPath] || content);
-  }
+  const FontMinAccess = (resolve, reject) => {
+    const fontmin = new Fontmin().src(accessResouce);
   
-  const fontmin = new Fontmin().src(accessResouce);
+    config.text && fontmin.use(Fontmin.glyph({
+      text: config.text,
+      hinting: false
+    }));
   
-  config.text && fontmin.use(Fontmin.glyph({
-    text: config.text,
-    hinting: false
-  }));
-
-  needTransExt && fontmin.use(Fontmin[`ttf2${ext}`](ext === 'woff' ? {
-    deflate: true
-  } : null));
-
-  fontmin.run((err, files) => {
-    if (err) {
-      return callback(err);
-    }
-    let result_content = needTransExt ? files[1].contents : files[0].contents;
-    globleContentCache[ttfPath] = result_content;
+    needTransExt && fontmin.use(Fontmin[`ttf2${ext}`](ext === 'woff' ? {
+        deflate: true
+      } : null));
+  
+    fontmin.run((err, files) => {
+      if (err) {
+        reject(err);
+      }
+      let result_content = needTransExt ? files[1].contents : files[0].contents;
+      globleContentCache[ttfPath] = result_content;
     
-    if (ext === 'woff2') {
-      result_content = ttf2woff2(result_content);
-    }
+      if (ext === 'woff2') {
+        result_content = ttf2woff2(result_content);
+      }
     
-    let callbackParam = '';
-    if(config.limit <= 0 || result_content.length < config.limit) {
-      callbackParam = "module.exports = " + JSON.stringify("data:" + (mimetype ? mimetype + ";" : "") + "base64," + result_content.toString("base64"));
+      let callbackParam = '';
+      if(config.limit <= 0 || result_content.length < config.limit) {
+        callbackParam = "module.exports = " + JSON.stringify("data:" + (mimetype ? mimetype + ";" : "") + "base64," + result_content.toString("base64"));
+      } else {
+        let url = LoaderUtiles.interpolateName(this, config.name, {
+          context: options.context || this.options.context,
+          content: result_content,
+          regExp: config.regExp
+        });
+        let publicPath = "__webpack_public_path__ + " + JSON.stringify(url);
+      
+        this.emitFile(url, result_content);
+        callbackParam = "module.exports = " + publicPath + ";";
+      }
+      resolve(callbackParam);
+    });
+  };
+  
+  new Promise( (resolve, reject) => {
+    if (!supportAccess) {
+      noFontMinAccess(globleContentCache[ttfPath] || content, resolve);
     } else {
-      let url = LoaderUtiles.interpolateName(this, config.name, {
-        context: options.context || this.options.context,
-        content: result_content,
-        regExp: config.regExp
-      });
-      let publicPath = "__webpack_public_path__ + " + JSON.stringify(url);
-  
-      this.emitFile(url, result_content);
-      callbackParam = "module.exports = " + publicPath + ";";
+      FontMinAccess(resolve);
     }
-    callback(null, callbackParam);
-  });
+  }).then(param => callback(null, param), err => callback(err));
+  
 };
 module.exports.raw = true;
