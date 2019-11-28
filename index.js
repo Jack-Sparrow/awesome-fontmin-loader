@@ -59,7 +59,7 @@ module.exports = function (content) {
       callbackParam = "module.exports = " + JSON.stringify("data:" + (mimetype ? mimetype + ";" : "") + "base64," + content.toString("base64"));
     } else {
       let url = LoaderUtiles.interpolateName(this, config.name, {
-        context: options.context || this.options.context,
+        context: options.context || (this.options && this.options.context) || this.rootContext,
         content: content,
         regExp: config.regExp
       });
@@ -97,7 +97,7 @@ module.exports = function (content) {
         callbackParam = "module.exports = " + JSON.stringify("data:" + (mimetype ? mimetype + ";" : "") + "base64," + result_content.toString("base64"));
       } else {
         let url = LoaderUtiles.interpolateName(this, config.name, {
-          context: options.context || this.options.context,
+          context: options.context || (this.options && this.options.context) || this.rootContext,
           content: result_content,
           regExp: config.regExp
         });
